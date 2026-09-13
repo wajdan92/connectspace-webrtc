@@ -1,6 +1,7 @@
 let ws;
 let peerConnection;
 let localStream;
+let pendingCandidates = [];
 
 let cameraEnabled = false;
 let micEnabled = false;
@@ -38,6 +39,27 @@ async function createPeerConnection() {
         }
     };
 
+    peerConnection.oniceconnectionstatechange = () => {
+        console.log(
+            "ICE connection state:",
+            peerConnection.iceConnectionState
+        );
+    };
+
+    peerConnection.onicegatheringstatechange = () => {
+        console.log(
+            "ICE gathering state:",
+            peerConnection.iceGatheringState
+        );
+    };
+
+    peerConnection.onsignalingstatechange = () => {
+        console.log(
+            "Signaling state:",
+            peerConnection.signalingState
+        );
+    };
+
     peerConnection.onconnectionstatechange = () => {
         if (peerConnection.connectionState === "connected") {
             setConnectionStatus("Connected to meeting viewer.");
@@ -47,6 +69,18 @@ async function createPeerConnection() {
             setConnectionStatus("Meeting connection interrupted.");
         }
     };
+}
+
+async function flushCandidates() {
+    for (const candidate of pendingCandidates) {
+        try {
+            await peerConnection.addIceCandidate(candidate);
+        } catch (error) {
+            console.error("Buffered ICE error:", error);
+        }
+    }
+
+    pendingCandidates = [];
 }
 
 function connectParticipant() {
@@ -88,12 +122,18 @@ function connectParticipant() {
 
         if (message.type === "answer") {
             await peerConnection.setRemoteDescription(message.answer);
+            await flushCandidates();
+
             setConnectionStatus("Camera connected. Meeting is live.");
         }
 
         if (message.type === "candidate") {
             try {
-                await peerConnection.addIceCandidate(message.candidate);
+                if (peerConnection.remoteDescription) {
+                    await peerConnection.addIceCandidate(message.candidate);
+                } else {
+                    pendingCandidates.push(message.candidate);
+                }
             } catch (error) {
                 console.error("ICE error:", error);
             }

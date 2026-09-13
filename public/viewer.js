@@ -50,10 +50,52 @@ async function createPeerConnection() {
         }
     };
 
-    peerConnection.ontrack = (event) => {
+    peerConnection.oniceconnectionstatechange = () => {
+        console.log(
+            "ICE connection state:",
+            peerConnection.iceConnectionState
+        );
+    };
+
+    peerConnection.onicegatheringstatechange = () => {
+        console.log(
+            "ICE gathering state:",
+            peerConnection.iceGatheringState
+        );
+    };
+
+    peerConnection.onsignalingstatechange = () => {
+        console.log(
+            "Signaling state:",
+            peerConnection.signalingState
+        );
+    };
+
+    peerConnection.ontrack = async (event) => {
         remoteVideo.srcObject = event.streams[0];
         videoPlaceholder.classList.add("hidden");
-        setStatus("Participant connected");
+
+        try {
+            await remoteVideo.play();
+            setStatus("Participant connected");
+        } catch (error) {
+            console.warn("Remote autoplay blocked:", error);
+
+            setStatus("Participant connected — click video to start playback");
+
+            remoteVideo.addEventListener(
+                "click",
+                async () => {
+                    try {
+                        await remoteVideo.play();
+                        setStatus("Participant connected");
+                    } catch (playError) {
+                        console.error("Remote playback failed:", playError);
+                    }
+                },
+                { once: true }
+            );
+        }
     };
 
     peerConnection.onconnectionstatechange = () => {
