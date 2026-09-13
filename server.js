@@ -28,11 +28,83 @@ function broadcastParticipants() {
     }
 }
 
-const server = http.createServer((req, res) => {
+async function handleTurnCredentials(req, res) {
+    const corsHeaders = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin":
+            "https://connectspace-webrtc.vercel.app"
+    };
+
+    try {
+        if (!process.env.TURN_KEY_ID || !process.env.TURN_API_TOKEN) {
+            res.writeHead(500, corsHeaders);
+            res.end(JSON.stringify({
+                error: "TURN configuration missing"
+            }));
+
+            return;
+        }
+
+        const response = await fetch(
+            `https://rtc.live.cloudflare.com/v1/turn/keys/${process.env.TURN_KEY_ID}/credentials/generate-ice-servers`,
+            {
+                method: "POST",
+                headers: {
+                    "Authorization":
+                        `Bearer ${process.env.TURN_API_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ttl: 3600
+                })
+            }
+        );
+
+        const text = await response.text();
+
+        if (!response.ok) {
+            console.error(
+                "Cloudflare TURN error:",
+                response.status,
+                text
+            );
+
+            res.writeHead(500, corsHeaders);
+            res.end(JSON.stringify({
+                error: "Unable to generate TURN credentials"
+            }));
+
+            return;
+        }
+
+        res.writeHead(200, corsHeaders);
+        res.end(text);
+    } catch (error) {
+        console.error(
+            "TURN credential endpoint error:",
+            error
+        );
+
+        res.writeHead(500, corsHeaders);
+        res.end(JSON.stringify({
+            error: "TURN credential request failed"
+        }));
+    }
+}
+
+const server = http.createServer(async (req, res) => {
     let pathname = new URL(
         req.url,
         `http://${req.headers.host}`
     ).pathname;
+
+    if (
+        req.method === "GET" &&
+        pathname === "/api/turn-credentials"
+    ) {
+        await handleTurnCredentials(req, res);
+        return;
+    }
 
     if (pathname === "/") {
         pathname = "/index.html";

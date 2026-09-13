@@ -34,11 +34,43 @@ function renderParticipants(list) {
     `).join("");
 }
 
+async function getIceServers() {
+    const response = await fetch(
+        "https://connectspace-webrtc-production.up.railway.app/api/turn-credentials"
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Unable to load TURN credentials"
+        );
+    }
+
+    const data = await response.json();
+
+    if (
+        !data.iceServers ||
+        !Array.isArray(data.iceServers)
+    ) {
+        throw new Error(
+            "Invalid TURN credential response"
+        );
+    }
+
+    console.log(
+        "Loaded ICE servers:",
+        data.iceServers.map(
+            server => server.urls
+        )
+    );
+
+    return data.iceServers;
+}
+
 async function createPeerConnection() {
+    const iceServers = await getIceServers();
+
     peerConnection = new RTCPeerConnection({
-        iceServers: [{
-            urls: "stun:stun.l.google.com:19302"
-        }]
+        iceServers
     });
 
     peerConnection.onicecandidate = (event) => {
