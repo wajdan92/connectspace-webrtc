@@ -53,7 +53,7 @@ function connectParticipant() {
     const WS_URL =
         window.location.hostname === "localhost"
             ? `ws://${window.location.host}`
-            : "wss://RENDER_BACKEND_URL";
+            : "wss://connectspace-webrtc-production.up.railway.app";
 
     ws = new WebSocket(WS_URL);
 
