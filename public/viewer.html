@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSpace Viewer</title>
+    <link rel="stylesheet" href="viewer.css">
+</head>
+
+<body>
+    <div class="viewer-shell">
+        <header class="viewer-header">
+            <a class="brand" href="/" aria-label="ConnectSpace home">
+                <span class="brand-mark" aria-hidden="true">C</span>
+                <span class="brand-name">ConnectSpace</span>
+            </a>
+
+            <div class="meeting-heading">
+                <span class="meeting-kicker">PRIVATE MEETING</span>
+                <h1>Participant session</h1>
+            </div>
+
+            <div class="viewer-status" aria-live="polite">
+                <span class="status-dot"></span>
+                <span id="viewerStatus">Waiting for participant...</span>
+            </div>
+
+            <label class="viewer-count" for="participantsToggle" aria-label="Show participants">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20m6-9a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm5-6.5a3 3 0 0 1 0 5.8M20 20v-1.5a3.5 3.5 0 0 0-2.5-3.35"/></svg>
+                <span id="participantCount">0</span>
+            </label>
+        </header>
+
+        <input id="participantsToggle" class="participants-toggle" type="checkbox">
+
+        <main class="viewer-main">
+            <section class="video-panel" aria-label="Participant video">
+                <div class="video-frame">
+                    <video id="remote" autoplay playsinline></video>
+                    <div id="videoPlaceholder" class="video-placeholder">
+                        <span class="placeholder-mark">C</span>
+                        <strong>Waiting for participant</strong>
+                        <span>The live camera will appear here.</span>
+                    </div>
+                    <div class="video-vignette"></div>
+                    <div class="video-meta">
+                        <span class="live-badge"><i></i> LIVE</span>
+                        <span class="video-caption">Participant camera</span>
+                    </div>
+                </div>
+
+                <div class="viewer-footer">
+                    <span class="footer-note">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.9 8.7 7 10 4.1-1.3 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                        Private session
+                    </span>
+                    <span class="footer-brand">ConnectSpace</span>
+                </div>
+            </section>
+
+            <aside class="participants-panel" aria-label="Connected participants">
+                <div class="panel-heading">
+                    <div>
+                        <span class="panel-kicker">IN THIS SESSION</span>
+                        <h2>Participants</h2>
+                    </div>
+                    <span class="count-pill">LIVE</span>
+                </div>
+                <div id="participantsList" class="participants-list"></div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="viewer.js"></script>
+</body>
+
+</html>

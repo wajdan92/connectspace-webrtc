@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSpace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="participant-header">
+        <a class="brand" href="/" aria-label="ConnectSpace home">
+            <span class="brand-mark" aria-hidden="true">C</span>
+            <span class="brand-name">ConnectSpace</span>
+        </a>
+        <span class="header-secure">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.9 8.7 7 10 4.1-1.3 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+            Secure meeting
+        </span>
+    </header>
+
+    <main class="participant-page">
+        <section class="participant-card" aria-labelledby="participantTitle">
+            <div class="card-accent accent-one"></div>
+            <div class="card-accent accent-two"></div>
+
+            <div class="welcome-copy">
+                <span class="welcome-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M15 10h4.2A1.8 1.8 0 0 1 21 11.8v4.4a1.8 1.8 0 0 1-1.8 1.8H15l-3 2v-2H5.8A1.8 1.8 0 0 1 4 16.2v-8.4A1.8 1.8 0 0 1 5.8 6H15a2 2 0 0 1 2 2v2Z"/></svg>
+                </span>
+                <p class="eyebrow">WELCOME TO CONNECTSPACE</p>
+                <h1 id="participantTitle">Getting your meeting ready</h1>
+                <p class="intro">Allow camera and microphone access to continue.</p>
+            </div>
+
+            <div class="permission-panel" aria-live="polite">
+                <span class="status-orbit" aria-hidden="true"><span></span></span>
+                <div class="permission-copy">
+                    <strong id="permissionStatus">Waiting for permission...</strong>
+                    <span id="connectionStatus">Connecting...</span>
+                </div>
+            </div>
+
+            <div class="preview-frame">
+                <video id="local" autoplay muted playsinline></video>
+                <div id="localPlaceholder" class="preview-placeholder">
+                    <span class="preview-placeholder-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M14 6H5.8A1.8 1.8 0 0 0 4 7.8v8.4A1.8 1.8 0 0 0 5.8 18H14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm2 3 4-2v10l-4-2V9Z"/></svg>
+                    </span>
+                    <span>Your camera preview will appear here</span>
+                </div>
+                <div class="preview-shade"></div>
+                <span class="preview-label">Local preview</span>
+            </div>
+
+            <div class="device-status" aria-label="Camera and microphone status">
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6H5.8A1.8 1.8 0 0 0 4 7.8v8.4A1.8 1.8 0 0 0 5.8 18H14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm2 3 4-2v10l-4-2V9Z"/></svg> Camera ready</span>
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3Zm-7-3a7 7 0 0 0 14 0m-7 7v3m-4 0h8"/></svg> Microphone ready</span>
+            </div>
+
+            <p class="privacy-note">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.9 8.7 7 10 4.1-1.3 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                Your connection is private and secure.
+            </p>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
